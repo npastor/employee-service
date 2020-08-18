@@ -4,19 +4,29 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value = "Employee")
 public class EmployeeDto {
 
+    @ApiModelProperty(value = "Employee ID.", readOnly = true)
     private Integer id;
 
+    @ApiModelProperty(value = "Email address of the employee.", required = true)
     private String email;
 
+    @ApiModelProperty(value = "First name of the employee.", required = true)
     private String firstName;
 
+    @ApiModelProperty(value = "Last name of the employee.", required = true)
     private String lastName;
 
+    @ApiModelProperty(value = "Birth date of the employee in format yyyy-MM-dd.", required = true, example = "1990-12-21")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
 
+    @ApiModelProperty(value = "Department Id of the department this employee belongs to.", required = true)
     private Integer departmentId;
 
     public Integer getId() {

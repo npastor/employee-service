@@ -1,9 +1,15 @@
 package com.takeaway.challenge.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value = "Department")
 public class DepartmentDto {
 
+    @ApiModelProperty(value = "Department ID.", readOnly = true)
     private Integer id;
 
+    @ApiModelProperty(value = "Department name.", required = true)
     private String name;
 
     public Integer getId() {
