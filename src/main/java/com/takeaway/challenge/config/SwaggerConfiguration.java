@@ -1,4 +1,4 @@
-package com.takeaway.challenge;
+package com.takeaway.challenge.config;
 
 import java.lang.reflect.WildcardType;
 import java.time.LocalDate;
@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import com.fasterxml.classmate.TypeResolver;
+import com.takeaway.challenge.ChallengeApi;
 
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
