@@ -1,5 +1,9 @@
 package com.takeaway.challenge.dto;
 
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.util.StringUtils;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -9,6 +13,7 @@ public class DepartmentDto {
     @ApiModelProperty(value = "Department ID.", readOnly = true)
     private Integer id;
 
+    @NotBlank()
     @ApiModelProperty(value = "Department name.", required = true)
     private String name;
 
@@ -36,6 +41,10 @@ public class DepartmentDto {
     public DepartmentDto name(String name) {
         this.name = name;
         return this;
+    }
+
+    public void trim() {
+        name = StringUtils.trimWhitespace(name);
     }
 
     @Override
