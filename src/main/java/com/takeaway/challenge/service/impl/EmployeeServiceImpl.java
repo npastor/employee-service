@@ -13,6 +13,7 @@ import com.takeaway.challenge.persistence.model.Department;
 import com.takeaway.challenge.persistence.model.Employee;
 import com.takeaway.challenge.persistence.repository.DepartmentRepository;
 import com.takeaway.challenge.persistence.repository.EmployeeRepository;
+import com.takeaway.challenge.producer.EventProducer;
 import com.takeaway.challenge.service.EmployeeService;
 
 @Service
@@ -23,6 +24,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private DepartmentRepository departmentRepository;
+
+    @Autowired
+    private EventProducer producer;
 
     @Override
     public List<EmployeeDto> getEmployees() {
@@ -55,7 +59,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         emp.setFirstName(employee.getFirstName());
         emp.setLastName(employee.getLastName());
         emp.setEmail(employee.getEmail().toLowerCase());
-        employeeRepository.save(emp);
+        Employee createdEmployee = employeeRepository.save(emp);
+
+        producer.employeeCreatedLog(createdEmployee.getId());
 
     }
 
@@ -71,12 +77,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setEmail(emp.getEmail().toLowerCase());
         employeeRepository.save(employee);
 
+        producer.employeeUpdatedLog(id);
+
     }
 
     @Override
     public void removeEmployee(Integer id) {
         Employee employee = employeeRepository.findById(id).orElseThrow(RuntimeException::new);
         employeeRepository.delete(employee);
+
+        producer.employeeDeletedLog(id);
 
     }
 
