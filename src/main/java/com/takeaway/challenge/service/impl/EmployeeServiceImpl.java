@@ -54,7 +54,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         boolean emailInUse = employeeRepository.findByEmail(employee.getEmail().toLowerCase()).isPresent();
 
         if (emailInUse) {
-            new ApplicationException(EMAIL_ALREADY_EXISTS + employee.getEmail());
+            throw new ApplicationException(EMAIL_ALREADY_EXISTS + employee.getEmail());
         }
 
         Department department = departmentRepository.findById(employee.getDepartmentId())

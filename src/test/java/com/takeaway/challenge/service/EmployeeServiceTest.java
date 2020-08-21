@@ -112,4 +112,16 @@ public class EmployeeServiceTest {
 
     }
 
+    @Test
+    void testCreateEmployee_EMAIL_ALREADY_EXISTS() {
+
+        Mockito.when(employeeRepository.findByEmail(Mockito.anyString()))
+               .thenReturn(Optional.of(new Employee()));
+
+        Assertions.assertThrows(ApplicationException.class, () -> {
+            employeeService.createEmployee(new EmployeeDto().email("abc@dss"));
+        });
+
+    }
+
 }
