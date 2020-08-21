@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.takeaway.challenge.dto.EmployeeDto;
+import com.takeaway.challenge.exception.ApplicationException;
 import com.takeaway.challenge.persistence.model.Department;
 import com.takeaway.challenge.persistence.model.Employee;
 import com.takeaway.challenge.persistence.repository.DepartmentRepository;
@@ -28,6 +29,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private EventProducer producer;
 
+    private static final String DEPARTMENT_NOT_FOUND = "Department with given dept id does not exists ";
+    private static final String EMPLOYEE_NOT_FOUND = "Employee with given id does not exists ";
+    private static final String EMAIL_ALREADY_EXISTS = "Email address already exists ";
+
     @Override
     public List<EmployeeDto> getEmployees() {
         return Optional.ofNullable(employeeRepository.findAll())
@@ -39,7 +44,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeDto getEmployeeById(Integer id) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(RuntimeException::new);
+        Employee employee = employeeRepository.findById(id)
+                                              .orElseThrow(() -> new ApplicationException(EMPLOYEE_NOT_FOUND + id));
         return mapToEmployeeDto(employee);
     }
 
@@ -48,10 +54,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         boolean emailInUse = employeeRepository.findByEmail(employee.getEmail().toLowerCase()).isPresent();
 
         if (emailInUse) {
-            throw new RuntimeException();
+            new ApplicationException(EMAIL_ALREADY_EXISTS + employee.getEmail());
         }
 
-        Department department = departmentRepository.findById(employee.getDepartmentId()).orElseThrow(RuntimeException::new);
+        Department department = departmentRepository.findById(employee.getDepartmentId())
+                                                    .orElseThrow(() -> new ApplicationException(DEPARTMENT_NOT_FOUND
+                                                                                                + employee.getDepartmentId()));
 
         Employee emp = new Employee();
         emp.setBirthDate(employee.getBirthDate());
@@ -67,8 +75,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void updateEmployee(EmployeeDto emp, Integer id) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(RuntimeException::new);
-        Department department = departmentRepository.findById(emp.getDepartmentId()).orElseThrow(RuntimeException::new);
+        Employee employee = employeeRepository.findById(id)
+                                              .orElseThrow(() -> new ApplicationException(EMPLOYEE_NOT_FOUND + id));
+        Department department =
+                              departmentRepository.findById(emp.getDepartmentId())
+                                                  .orElseThrow(() -> new ApplicationException(DEPARTMENT_NOT_FOUND
+                                                                                              + emp.getDepartmentId()));
 
         employee.setBirthDate(emp.getBirthDate());
         employee.setDepartment(department);
@@ -83,7 +95,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void removeEmployee(Integer id) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(RuntimeException::new);
+        Employee employee = employeeRepository.findById(id)
+                                              .orElseThrow(() -> new ApplicationException(EMPLOYEE_NOT_FOUND + id));
         employeeRepository.delete(employee);
 
         producer.employeeDeletedLog(id);
