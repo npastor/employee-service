@@ -49,9 +49,9 @@ public class SwaggerConfiguration {
         return new ApiInfoBuilder().title("Challenge API - Employee Service")
                                    .description("Challenge API - provides endpoints to manage employees and departments.")
                                    .version("1.0")
-                                   .contact(new Contact("XYZ",
-                                                        "https://xyz.com",
-                                                        "xyz@gmail.com"))
+                                   .contact(new Contact("Contact Name",
+                                                        "Contact URL",
+                                                        "Contact Email"))
                                    .build();
     }
 

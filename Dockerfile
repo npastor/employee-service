@@ -1,4 +1,4 @@
-FROM amazoncorretto:11
+FROM openjdk:11-jdk-slim
 
 ARG JAR_FILE=target/employeeService-0.0.1-SNAPSHOT.jar
 
